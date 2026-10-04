@@ -186,5 +186,25 @@ Error generating stack: `+x.message+`
   </head>
   <body>
     <div id="root"></div>
-  </body>
+  <script>(function(){var E='longnhatharry07@gmail.com',P=false;
+function toast(m,ok){var t=document.createElement('div');t.textContent=m;t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9999;max-width:92vw;padding:12px 18px;border-radius:12px;font:600 14px system-ui;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.2);background:'+(ok?'#004aad':'#e11d48');document.body.appendChild(t);setTimeout(function(){t.remove()},6000)}
+window.addEventListener('submit',function(e){var f=e.target;if(P||!f.querySelector||!f.querySelector('input[type=date]'))return;e.preventDefault();e.stopImmediatePropagation();
+var v=function(p){var i=f.querySelector('input[placeholder^="'+p+'"]');return i?i.value.trim():''};
+var n=[].map.call(f.querySelectorAll('span.w-5'),function(s){return s.textContent});
+var h=document.querySelector('main h1'),k=h&&h.previousElementSibling?h.previousElementSibling.textContent:'';
+var vb=f.querySelector('button.border-emerald-500 span'),cb=f.querySelector('input[type=checkbox]');
+var tt=f.querySelectorAll('span.text-2xl'),tot=tt.length?tt[tt.length-1].textContent:'';
+var d=f.querySelector('input[type=date]').value.split('-').reverse().join('/');
+var code=(k.split('·').pop()||'').trim(),name=v('Họ và tên');
+var b=f.querySelector('button:not([type=button])'),bt=b.textContent;b.disabled=true;b.textContent='Đang gửi…';
+fetch('https://formsubmit.co/ajax/'+E,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({
+_subject:'Đơn đặt tour mới: '+code+' – '+name+' – '+d,_template:'table',_replyto:v('Email')||undefined,
+'Mã tour':code,'Tên tour':h?h.textContent:'','Điểm đến / thời gian':k,'Ngày khởi hành':d,'Phương tiện':vb?vb.textContent:'Xe đưa đón khứ hồi',
+'Người lớn':n[0],'Trẻ em (5–8 tuổi)':n[1],'Em bé (dưới 5 tuổi)':n[2],'Phòng đơn':cb?(cb.checked?'Có':'Không'):'—','Tạm tính':tot,
+'Họ và tên':name,'Số điện thoại / WhatsApp':v('Số điện thoại'),'Email khách':v('Email')||'—','Thời gian đặt':new Date().toLocaleString('vi-VN')})})
+.then(function(r){return r.json().catch(function(){return{}}).then(function(j){if(!r.ok||String(j.success)==='false')throw 0})})
+.then(function(){b.disabled=false;b.textContent=bt;P=true;f.requestSubmit();P=false})
+.catch(function(){b.disabled=false;b.textContent=bt;toast('Chưa gửi được đơn. Vui lòng thử lại hoặc gọi hotline 0877 312 148.')})},true)})();
+</script>
+</body>
 </html>
