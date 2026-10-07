@@ -206,5 +206,58 @@ _subject:'Đơn đặt tour mới: '+code+' – '+name+' – '+d,_template:'tabl
 .then(function(){b.disabled=false;b.textContent=bt;P=true;f.requestSubmit();P=false})
 .catch(function(){b.disabled=false;b.textContent=bt;toast('Chưa gửi được đơn. Vui lòng thử lại hoặc gọi hotline 0877 312 148.')})},true)})();
 </script>
+<style>
+.lj-about{background:#fff;padding:72px 0 80px;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:#0B1F4D}
+.lj-about *{box-sizing:border-box}
+.lj-about .lj-w{max-width:956px;margin:0 auto;padding:0 20px}
+.lj-about .lj-eb{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#004AAD}
+.lj-about h2{margin:8px 0 20px;font-size:clamp(26px,3.6vw,36px);line-height:1.2;font-weight:800;letter-spacing:-.02em}
+.lj-about .lj-g{display:grid;grid-template-columns:1.25fr 1fr;gap:40px;align-items:start}
+.lj-about p{margin:0 0 14px;font-size:16px;line-height:1.7;color:#34405E}
+.lj-about .lj-mv{display:grid;gap:12px}
+.lj-about .lj-mv div{border-radius:16px;padding:20px 22px;background:#F4F7FC}
+.lj-about .lj-mv div.lj-v{background:#004AAD;color:#fff;position:relative;overflow:hidden}
+.lj-about .lj-mv small{display:block;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;opacity:.75;margin-bottom:6px}
+.lj-about .lj-mv b{display:block;font-size:17px;font-weight:600;line-height:1.45}
+.lj-about .lj-mv svg{position:absolute;right:-18px;bottom:-22px;width:110px;height:106px;fill:#fff;opacity:.08}
+.lj-about .lj-vals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:36px}
+.lj-about .lj-val{border:1px solid #DCE3EF;border-radius:16px;padding:20px}
+.lj-about .lj-ic{width:40px;height:40px;border-radius:12px;background:#DCE8FB;color:#004AAD;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.lj-about .lj-ic svg{width:20px;height:20px}
+.lj-about .lj-val h3{margin:0 0 6px;font-size:16px;font-weight:700}
+.lj-about .lj-val p{margin:0;font-size:14px;line-height:1.6;color:#4A5878}
+@media (max-width:760px){.lj-about{padding:56px 0 64px}.lj-about .lj-g{grid-template-columns:1fr;gap:24px}.lj-about .lj-vals{grid-template-columns:1fr}}
+</style>
+<template id="lj-about-tpl"><section class="lj-about" id="ve-chung-toi" aria-labelledby="lj-about-h">
+<div class="lj-w">
+<div class="lj-eb">Về chúng tôi</div>
+<h2 id="lj-about-h">Du lịch chất lượng, dành cho người Việt</h2>
+<div class="lj-g">
+<div>
+<p>Legend Journey ra đời với sứ mệnh phục vụ những chuyến du lịch chất lượng dành cho người Việt.</p>
+<p>Nhu cầu du lịch của người Việt ngày càng lớn, nhưng phần lớn các chuyến đi vẫn tự phát. Vì vậy, Legend Journey tạo ra các chuyến đi trong ngày với lịch trình chuyên nghiệp và tối ưu thời gian.</p>
+<p>Với mức giá hợp lý và chất lượng uy tín, Legend Journey hướng đến tầm nhìn tiếp cận hàng triệu người Việt.</p>
+</div>
+<div class="lj-mv">
+<div><small>Sứ mệnh</small><b>Phục vụ những chuyến du lịch chất lượng dành cho người Việt.</b></div>
+<div class="lj-v"><small>Tầm nhìn</small><b>Tiếp cận hàng triệu người Việt.</b><svg viewBox="0 0 300 288" aria-hidden="true"><path d="M0 0H224A76 76 0 0 1 224 152H152V86H222A15 15 0 0 0 222 56H60V221H127V288H0Z"/></svg></div>
+</div>
+</div>
+<div class="lj-vals">
+<div class="lj-val"><div class="lj-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h3>Lịch trình chuyên nghiệp</h3><p>Điểm dừng, giờ giấc và di chuyển đều được lên sẵn. Bạn chỉ việc tận hưởng.</p></div>
+<div class="lj-val"><div class="lj-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><h3>Tối ưu thời gian</h3><p>Đi và về trong ngày, không cần xin nghỉ dài hay đặt phòng qua đêm.</p></div>
+<div class="lj-val"><div class="lj-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Giá hợp lý, uy tín</h3><p>Giá trọn gói rõ ràng ngay từ đầu, chất lượng đúng như cam kết.</p></div>
+</div>
+</div>
+</section></template>
+<script>(function(){
+function place(){var r=document.getElementById('root');if(!r)return;var f=r.querySelector('footer');var s=document.getElementById('ve-chung-toi');
+if(!f){return}
+if(!s){s=document.getElementById('lj-about-tpl').content.firstElementChild.cloneNode(true)}
+var home=r.textContent.indexOf('Bạn muốn đi đâu')>-1;var d=home?'':'none';if(s.style.display!==d)s.style.display=d;if(s.nextElementSibling!==f)f.parentNode.insertBefore(s,f)}
+function start(){place();new MutationObserver(place).observe(document.getElementById('root'),{childList:true,subtree:true})}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();</script>
+
 </body>
 </html>
