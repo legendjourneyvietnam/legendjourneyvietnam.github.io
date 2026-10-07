@@ -162,7 +162,7 @@
         return '<button type="button" class="vopt' + (i === st.veh ? ' on' : '') + '" data-veh="' + i + '" aria-pressed="' + (i === st.veh) + '"><span>' + esc(v.label) + '</span><span>' + (v.extra ? '+' + vnd(v.extra) : 'Tiêu chuẩn') + '</span></button>';
       }).join('') + '</div></div>' : '';
       wrap.innerHTML = '<div class="book" id="book-form"><div class="lbl-s">Giá người lớn</div><div class="big">' + vnd(t.price) + '</div>' +
-        '<div class="tiny">' + (isFlat(t.price) ? 'Đồng giá trọn gói' : esc(t.priceUsd) + ' · trọn gói') + (t.minPax ? ' · tối thiểu ' + t.minPax + ' khách' : '') + '</div>' +
+        '<div class="tiny">' + (isFlat(t.price) ? 'Đồng giá trọn gói' : (t.priceUsd ? esc(t.priceUsd) + ' · ' : '') + 'Trọn gói') + (t.minPax ? ' · tối thiểu ' + t.minPax + ' khách' : '') + '</div>' +
         '<form novalidate>' +
         '<label class="f">Ngày khởi hành<input type="date" name="date" min="' + today + '" value="' + st.date + '" required></label>' + veh +
         '<div class="pax"><div class="grp-t">' + icon('users') + 'Số khách</div>' +
