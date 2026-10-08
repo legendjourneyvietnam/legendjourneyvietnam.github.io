@@ -11,7 +11,10 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   };
-  var img = function (k) { return 'assets/' + k + '.jpg'; };
+  var img = function (k, w) {
+    if (String(k).indexOf('u:') === 0) return 'https://images.unsplash.com/' + k.slice(2) + '?auto=format&fit=crop&q=80&w=' + (w || 1200);
+    return 'assets/' + k + '.jpg';
+  };
   var vnd = function (n) { return Math.round(n).toLocaleString('vi-VN') + 'đ'; };
   var short = function (n) { return (n / 1000).toLocaleString('vi-VN') + 'K'; };
   var isFlat = function (p) { return p === 999000 || p === 1599000; };
@@ -23,7 +26,7 @@
   function renderHome() {
     $('#dest-grid').innerHTML = DATA.map(function (d) {
       return '<a class="dest" href="#/' + d.id + '">' +
-        '<img src="' + img(d.cover) + '" alt="' + esc(d.name) + '" loading="lazy">' +
+        '<img src="' + img(d.cover, 1400) + '" alt="' + esc(d.name) + '" loading="lazy">' +
         '<div><div class="tag">' + icon(d.icon === 'ship' ? 'ship' : 'mountain') + esc(d.tagline) + '</div>' +
         '<h3>' + esc(d.name) + '</h3><p>' + esc(d.intro) + '</p>' +
         '<span class="pill">' + tourCount(d) + ' tour · Khám phá ' + icon('right') + '</span></div></a>';
@@ -35,7 +38,7 @@
     if (nb1 && nb1.tours.length) {
       var min = Math.min.apply(null, nb1.tours.map(function (t) { return t.price; }));
       cards.push(featCard({
-        image: nb1.image, badge: 'TRỌN GÓI', title: 'Ninh Bình trong ngày',
+        image: 'u:photo-1557750255-c76072a7aad1', badge: 'TRỌN GÓI', title: 'Ninh Bình trong ngày',
         sub: 'Tràng An, Tam Cốc, Hang Múa, Hoa Lư, Bái Đính… chọn hành trình bạn thích.',
         facts: [['Thời lượng', 'Đi về trong ngày'], ['Lựa chọn', nb1.tours.length + ' hành trình'], ['Đón khách', 'Phố Cổ Hà Nội'], ['Bữa ăn', 'Buffet trưa']],
         priceLabel: 'Chỉ từ', price: min,
@@ -47,7 +50,7 @@
     if (son) {
       var st = son.days[0].stops;
       cards.push(featCard({
-        image: son.image, badge: 'DU THUYỀN 5★', title: 'Vịnh Hạ Long trong ngày',
+        image: 'u:photo-1643029891412-92f9a81a8c16', badge: 'DU THUYỀN 5★', title: 'Vịnh Hạ Long trong ngày',
         sub: son.short,
         facts: [['Đón khách', st[0].time], ['Trở về', st[st.length - 1].time], ['Du thuyền', 'Halong Sonata 5★'], ['Bữa ăn', 'Buffet trưa quốc tế']],
         priceLabel: 'Trọn gói', price: son.price,
@@ -59,7 +62,7 @@
 
   function featCard(c) {
     return '<article class="card">' +
-      '<div class="card-img" style="background-image:url(' + img(c.image) + ')" role="img" aria-label="' + esc(c.title) + '"><span class="badge">' + esc(c.badge) + '</span></div>' +
+      '<div class="card-img" style="background-image:url(' + img(c.image, 1400) + ')" role="img" aria-label="' + esc(c.title) + '"><span class="badge">' + esc(c.badge) + '</span></div>' +
       '<div class="card-body"><div><h3>' + esc(c.title) + '</h3><div class="sub">' + esc(c.sub) + '</div></div>' +
       '<div class="facts">' + c.facts.map(function (f) { return '<div class="fact"><small>' + esc(f[0]) + '</small><b>' + esc(f[1]) + '</b></div>'; }).join('') + '</div>' +
       '<div class="price"><small>' + esc(c.priceLabel) + '</small><strong>' + short(c.price) + '</strong><span>/người</span></div>' +
