@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   var DATA = window.LJ_DATA || [];
-  var BOOKING_EMAIL = 'longnhatharry07@gmail.com';
+  var BOOKING_EMAIL = 'legendjourneyvietnam@gmail.com';
   var HOTLINE = '0878 533 399';
   var STEPS = ['Địa điểm', 'Thời gian', 'Chọn tour', 'Chi tiết'];
 
