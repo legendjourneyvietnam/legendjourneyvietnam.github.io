@@ -1,7 +1,8 @@
 (function () {
   'use strict';
   var DATA = window.LJ_DATA || [];
-  var BOOKING_EMAIL = 'legendjourneyvietnam@gmail.com';
+  var BOOKING_EMAIL = 'longnhatharry07@gmail.com'; // địa chỉ đã kích hoạt FormSubmit
+  var BOOKING_CC = 'legendjourneyvietnam@gmail.com'; // nhận bản sao
   var HOTLINE = '0878 533 399';
   var STEPS = ['Địa điểm', 'Thời gian', 'Chọn tour', 'Chi tiết'];
 
@@ -205,7 +206,7 @@
         st.sending = true; btn.disabled = true; btn.textContent = 'Đang gửi…';
         var dd = st.date.split('-').reverse().join('/');
         var payload = {
-          _subject: 'Đơn đặt tour mới: ' + t.code + ' – ' + st.name + ' – ' + dd, _template: 'table',
+          _subject: 'Đơn đặt tour mới: ' + t.code + ' – ' + st.name + ' – ' + dd, _template: 'table', _cc: BOOKING_CC,
           'Mã tour': t.code, 'Tên tour': t.name, 'Điểm đến / thời gian': d.name + ' · ' + du.label, 'Ngày khởi hành': dd,
           'Phương tiện': t.vehicles.length > 1 ? t.vehicles[st.veh].label : 'Xe đưa đón khứ hồi',
           'Người lớn': String(st.adults), 'Trẻ em (5–8 tuổi)': String(st.kids), 'Em bé (dưới 5 tuổi)': String(st.babies),
