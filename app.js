@@ -2,7 +2,7 @@
   'use strict';
   var DATA = window.LJ_DATA || [];
   var BOOKING_EMAIL = 'longnhatharry07@gmail.com';
-  var HOTLINE = '0877 312 148';
+  var HOTLINE = '0878 533 399';
   var STEPS = ['Địa điểm', 'Thời gian', 'Chọn tour', 'Chi tiết'];
 
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -67,7 +67,7 @@
       '<div class="facts">' + c.facts.map(function (f) { return '<div class="fact"><small>' + esc(f[0]) + '</small><b>' + esc(f[1]) + '</b></div>'; }).join('') + '</div>' +
       '<div class="price"><small>' + esc(c.priceLabel) + '</small><strong>' + short(c.price) + '</strong><span>/người</span></div>' +
       '<div class="cta"><a class="btn btn-blue" href="' + c.href + '">' + esc(c.cta) + icon('right') + '</a>' +
-      '<a class="btn btn-line" href="tel:0877312148">' + icon('phone') + 'Gọi ' + HOTLINE + '</a></div></div></article>';
+      '<a class="btn btn-line" href="tel:0878533399">' + icon('phone') + 'Gọi ' + HOTLINE + '</a></div></div></article>';
   }
 
   /* ---------- Luồng đặt tour ---------- */
