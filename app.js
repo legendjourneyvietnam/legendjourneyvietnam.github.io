@@ -1,9 +1,9 @@
 (function () {
   'use strict';
-  var DATA = window.LJ_DATA || [];
+  var I = window.LJ_I18N, T = I.t;
+  var DATA = I.data();
   var BOOKING_EMAIL = 'legendjourneyvietnam@gmail.com';
   var HOTLINE = '0878 533 399';
-  var STEPS = ['Địa điểm', 'Thời gian', 'Chọn tour', 'Chi tiết'];
 
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var esc = function (s) {
@@ -15,12 +15,17 @@
     if (String(k).indexOf('u:') === 0) return 'https://images.unsplash.com/' + k.slice(2) + '?auto=format&fit=crop&q=80&w=' + (w || 1200);
     return 'assets/' + k + '.jpg';
   };
-  var vnd = function (n) { return Math.round(n).toLocaleString('vi-VN') + 'đ'; };
-  var short = function (n) { return (n / 1000).toLocaleString('vi-VN') + 'K'; };
+  var vnd = function (n) { return I.lang === 'en' ? Math.round(n).toLocaleString('en-US') + ' VND' : Math.round(n).toLocaleString('vi-VN') + 'đ'; };
+  var short = function (n) { return (n / 1000).toLocaleString(I.lang === 'en' ? 'en-US' : 'vi-VN') + 'K'; };
   var isFlat = function (p) { return p === 999000 || p === 1599000; };
   var icon = function (id, cls) { return '<svg class="i' + (cls ? ' ' + cls : '') + '"><use href="#i-' + id + '"/></svg>'; };
   var tourCount = function (d) { return d.durations.reduce(function (a, x) { return a + x.tours.length; }, 0); };
   var findDest = function (id) { return DATA.filter(function (d) { return d.id === id; })[0] || null; };
+  var viTour = function (did, duid, code) {
+    var d = (window.LJ_DATA || []).filter(function (x) { return x.id === did; })[0]; if (!d) return null;
+    var du = d.durations.filter(function (x) { return x.id === duid; })[0]; if (!du) return null;
+    var t = du.tours.filter(function (x) { return x.code === code; })[0]; return t ? { d: d, du: du, t: t } : null;
+  };
 
   /* ---------- Trang chủ ---------- */
   function renderHome() {
@@ -29,7 +34,7 @@
         '<img src="' + img(d.cover, 1400) + '" alt="' + esc(d.name) + '" loading="lazy">' +
         '<div><div class="tag">' + icon(d.icon === 'ship' ? 'ship' : 'mountain') + esc(d.tagline) + '</div>' +
         '<h3>' + esc(d.name) + '</h3><p>' + esc(d.intro) + '</p>' +
-        '<span class="pill">' + tourCount(d) + ' tour · Khám phá ' + icon('right') + '</span></div></a>';
+        '<span class="pill">' + T('toursN', { n: tourCount(d) }) + ' · ' + T('explore') + ' ' + icon('right') + '</span></div></a>';
     }).join('');
 
     var cards = [];
@@ -38,11 +43,11 @@
     if (nb1 && nb1.tours.length) {
       var min = Math.min.apply(null, nb1.tours.map(function (t) { return t.price; }));
       cards.push(featCard({
-        image: 'u:photo-1557750255-c76072a7aad1', badge: 'TRỌN GÓI', title: 'Ninh Bình trong ngày',
-        sub: 'Tràng An, Tam Cốc, Hang Múa, Hoa Lư, Bái Đính… chọn hành trình bạn thích.',
-        facts: [['Thời lượng', 'Đi về trong ngày'], ['Lựa chọn', nb1.tours.length + ' hành trình'], ['Đón khách', 'Phố Cổ Hà Nội'], ['Bữa ăn', 'Buffet trưa']],
-        priceLabel: 'Chỉ từ', price: min,
-        href: '#/ninh-binh/1d', cta: 'Xem ' + nb1.tours.length + ' hành trình'
+        image: 'u:photo-1557750255-c76072a7aad1', badge: T('badgeAll'), title: T('featNbTitle'),
+        sub: T('featNbSub'),
+        facts: [[T('fDuration'), T('fDayTrip')], [T('fOptions'), T('fItins', { n: nb1.tours.length })], [T('fPickup'), T('fPickupVal')], [T('fMeal'), T('fLunch')]],
+        priceLabel: T('fromPrice'), price: min,
+        href: '#/ninh-binh/1d', cta: T('seeItins', { n: nb1.tours.length })
       }));
     }
     var hl1 = hl && hl.durations.filter(function (x) { return x.id === '1d'; })[0];
@@ -50,11 +55,11 @@
     if (son) {
       var st = son.days[0].stops;
       cards.push(featCard({
-        image: 'u:photo-1643029891412-92f9a81a8c16', badge: 'DU THUYỀN 5★', title: 'Vịnh Hạ Long trong ngày',
+        image: 'u:photo-1643029891412-92f9a81a8c16', badge: T('badgeCruise'), title: T('featHlTitle'),
         sub: son.short,
-        facts: [['Đón khách', st[0].time], ['Trở về', st[st.length - 1].time], ['Du thuyền', 'Halong Sonata 5★'], ['Bữa ăn', 'Buffet trưa quốc tế']],
-        priceLabel: 'Trọn gói', price: son.price,
-        href: '#/ha-long/1d/' + son.code, cta: 'Xem chi tiết & đặt'
+        facts: [[T('fPickup'), st[0].time], [T('fReturn'), st[st.length - 1].time], [T('fCruise'), 'Halong Sonata 5★'], [T('fMeal'), T('fIntlLunch')]],
+        priceLabel: T('allIn'), price: son.price,
+        href: '#/ha-long/1d/' + son.code, cta: T('seeDetail')
       }));
     }
     $('#featured').innerHTML = cards.join('');
@@ -65,19 +70,19 @@
       '<div class="card-img" style="background-image:url(' + img(c.image, 1400) + ')" role="img" aria-label="' + esc(c.title) + '"><span class="badge">' + esc(c.badge) + '</span></div>' +
       '<div class="card-body"><div><h3>' + esc(c.title) + '</h3><div class="sub">' + esc(c.sub) + '</div></div>' +
       '<div class="facts">' + c.facts.map(function (f) { return '<div class="fact"><small>' + esc(f[0]) + '</small><b>' + esc(f[1]) + '</b></div>'; }).join('') + '</div>' +
-      '<div class="price"><small>' + esc(c.priceLabel) + '</small><strong>' + short(c.price) + '</strong><span>/người</span></div>' +
+      '<div class="price"><small>' + esc(c.priceLabel) + '</small><strong>' + short(c.price) + '</strong><span>' + T('perPerson') + '</span></div>' +
       '<div class="cta"><a class="btn btn-blue" href="' + c.href + '">' + esc(c.cta) + icon('right') + '</a>' +
-      '<a class="btn btn-line" href="tel:0878533399">' + icon('phone') + 'Gọi ' + HOTLINE + '</a></div></div></article>';
+      '<a class="btn btn-line" href="tel:0878533399">' + icon('phone') + T('call') + ' ' + HOTLINE + '</a></div></div></article>';
   }
 
   /* ---------- Luồng đặt tour ---------- */
   function stepper(step, d, du) {
     var links = ['#chon-tour', '#/' + (d && d.id), '#/' + (d && d.id) + '/' + (du && du.id), ''];
-    return STEPS.map(function (label, i) {
+    return T('steps').map(function (label, i) {
       var cls = i < step ? 'done' : i === step ? 'cur' : '';
       var inner = '<span class="num">' + (i < step ? icon('check') : i + 1) + '</span><span class="lbl">' + label + '</span>';
       var btn = i < step ? '<button type="button" data-go="' + links[i] + '">' + inner + '</button>' : '<button type="button" disabled' + (i === step ? ' aria-current="step"' : '') + '>' + inner + '</button>';
-      return '<li class="' + cls + '">' + btn + (i < STEPS.length - 1 ? '<span class="line"></span>' : '') + '</li>';
+      return '<li class="' + cls + '">' + btn + (i < 3 ? '<span class="line"></span>' : '') + '</li>';
     }).join('');
   }
 
@@ -86,29 +91,29 @@
   }
 
   function viewDurations(d) {
-    return head('Bước 2 · ' + d.name, 'Bạn đi trong bao lâu?', 'Chọn thời lượng chuyến đi phù hợp với lịch trình của bạn.') +
+    return head(T('step') + ' 2 · ' + d.name, T('howLong'), T('howLongSub')) +
       '<div class="dur-grid">' + d.durations.map(function (du) {
         var min = du.tours.length ? Math.min.apply(null, du.tours.map(function (t) { return t.price; })) : 0;
         return '<a class="tile" href="#/' + d.id + '/' + du.id + '"><div class="ph"><img src="' + img(du.image) + '" alt="' + esc(du.label) + '" loading="lazy"></div>' +
           '<div class="bd"><h3>' + esc(du.label) + '</h3><div class="muted">' + esc(du.sub) + '</div>' +
-          '<div class="row"><span>' + (du.tours.length ? du.tours.length + ' lựa chọn · từ <em>' + vnd(min) + '</em>' : 'Liên hệ để đặt') + '</span><span class="go">' + icon('right') + '</span></div></div></a>';
+          '<div class="row"><span>' + (du.tours.length ? T('optFrom', { n: du.tours.length }) + ' <em>' + vnd(min) + '</em>' : T('contactToBook')) + '</span><span class="go">' + icon('right') + '</span></div></div></a>';
       }).join('') + '</div>';
   }
 
   function viewTours(d, du) {
-    var k = 'Bước 3 · ' + d.name + ' · ' + du.label;
+    var k = T('step') + ' 3 · ' + d.name + ' · ' + du.label;
     if (!du.tours.length) {
-      return head(k, 'Tour đang được cập nhật') +
-        '<div class="empty"><img src="' + img(du.image) + '" alt=""><div><p>Chương trình <b>' + esc(d.name + ' ' + du.label) + '</b> đang được cập nhật. Vui lòng liên hệ để được tư vấn lịch trình và giá tốt nhất.</p>' +
-        '<a class="btn btn-blue" href="tel:' + d.hotline.replace(/[^\d+]/g, '') + '">' + icon('phone') + 'Gọi ' + esc(d.hotline) + '</a></div></div>';
+      return head(k, T('updating')) +
+        '<div class="empty"><img src="' + img(du.image) + '" alt=""><div><p>' + T('updatingTxt', { x: esc(d.name + ' ' + du.label) }) + '</p>' +
+        '<a class="btn btn-blue" href="tel:' + d.hotline.replace(/[^\d+]/g, '') + '">' + icon('phone') + T('call') + ' ' + esc(d.hotline) + '</a></div></div>';
     }
-    return head(k, 'Chọn hành trình phù hợp', du.tours.length + ' lựa chọn cho chuyến ' + du.label.toLowerCase() + ' tại ' + d.name + '.') +
+    return head(k, T('pickItin'), T('pickItinSub', { n: du.tours.length, d: du.label.toLowerCase(), p: d.name })) +
       '<div class="tour-grid">' + du.tours.map(function (t) {
         return '<a class="tile" href="#/' + d.id + '/' + du.id + '/' + t.code + '"><div class="ph"><img src="' + img(t.image) + '" alt="' + esc(t.name) + '" loading="lazy">' +
-          '<span class="chip code">' + esc(t.code) + '</span>' + (t.featured ? '<span class="chip hot">Gợi ý</span>' : '') + '<h3>' + esc(t.name) + '</h3></div>' +
+          '<span class="chip code">' + esc(t.code) + '</span>' + (t.featured ? '<span class="chip hot">' + T('suggest') + '</span>' : '') + '<h3>' + esc(t.name) + '</h3></div>' +
           '<div class="bd"><div class="muted">' + esc(t.short) + '</div><div class="hl">' + t.highlights.map(function (h) { return '<span>' + esc(h) + '</span>'; }).join('') + '</div>' +
-          '<div class="row"><div><small>' + (isFlat(t.price) ? 'Đồng giá / khách' : 'Giá / khách') + '</small><b>' + vnd(t.price) + '</b><small>' + esc(t.priceUsd || 'trọn gói') + '</small></div>' +
-          '<span class="more">Chi tiết ' + icon('right') + '</span></div></div></a>';
+          '<div class="row"><div><small>' + (isFlat(t.price) ? T('flatPer') : T('pricePer')) + '</small><b>' + vnd(t.price) + '</b><small>' + esc(t.priceUsd || T('allInLower')) + '</small></div>' +
+          '<span class="more">' + T('detail') + ' ' + icon('right') + '</span></div></div></a>';
       }).join('') + '</div>';
   }
 
@@ -118,21 +123,21 @@
 
   function viewDetail(d, du, t) {
     var g = t.gallery || [];
-    var h = '<div class="d-hero"><img src="' + img(t.image) + '" alt="' + esc(t.name) + '"><div class="k">Bước 4 · ' + esc(d.name) + ' · ' + esc(du.label) + ' · ' + esc(t.code) + '</div>' +
+    var h = '<div class="d-hero"><img src="' + img(t.image) + '" alt="' + esc(t.name) + '"><div class="k">' + T('step') + ' 4 · ' + esc(d.name) + ' · ' + esc(du.label) + ' · ' + esc(t.code) + '</div>' +
       '<h1 id="tour-name">' + esc(t.name) + '</h1><p>' + esc(t.short) + '</p></div>';
-    h += '<div class="gallery' + (g.length > 4 ? ' g6' : '') + '">' + g.map(function (k) { return '<button type="button" data-zoom="' + img(k) + '" aria-label="Xem ảnh lớn"><img src="' + img(k) + '" alt="" loading="lazy"></button>'; }).join('') + '</div>';
+    h += '<div class="gallery' + (g.length > 4 ? ' g6' : '') + '">' + g.map(function (k) { return '<button type="button" data-zoom="' + img(k) + '" aria-label="' + T('zoom') + '"><img src="' + img(k) + '" alt="" loading="lazy"></button>'; }).join('') + '</div>';
     h += '<div class="d-grid"><div>';
     t.days.forEach(function (day) {
-      h += '<section class="box"><h2>' + esc(day.title) + '</h2>' + (day.meals ? '<div class="meals">Bữa ăn: ' + esc(day.meals) + '</div>' : '') +
+      h += '<section class="box"><h2>' + esc(day.title) + '</h2>' + (day.meals ? '<div class="meals">' + T('meals') + ': ' + esc(day.meals) + '</div>' : '') +
         '<ol class="tl">' + day.stops.map(function (s) { return '<li><b>' + esc(s.time) + '</b><p>' + esc(s.text) + '</p></li>'; }).join('') + '</ol></section>';
     });
     if (t.vehicles.length > 1) {
-      h += '<section class="box"><h3>' + icon('bus') + 'Phương tiện đưa đón</h3><div class="veh">' + t.vehicles.map(function (v, i) {
-        return '<figure><img src="' + img(i === 0 ? 'shuttle' : 'limo') + '" alt="' + esc(v.label) + '" loading="lazy"><figcaption><b>' + esc(v.label) + '</b><span>' + (v.extra ? '+' + vnd(v.extra) + '/khách' : 'Tiêu chuẩn') + '</span></figcaption></figure>';
+      h += '<section class="box"><h3>' + icon('bus') + T('transport') + '</h3><div class="veh">' + t.vehicles.map(function (v, i) {
+        return '<figure><img src="' + img(i === 0 ? 'shuttle' : 'limo') + '" alt="' + esc(v.label) + '" loading="lazy"><figcaption><b>' + esc(v.label) + '</b><span>' + (v.extra ? '+' + vnd(v.extra) + T('perGuest') : T('standard')) + '</span></figcaption></figure>';
       }).join('') + '</div></section>';
     }
-    h += '<div class="two"><section class="box"><h3>Bao gồm</h3>' + list(t.inclusion, true) + '</section><section class="box"><h3>Không bao gồm</h3>' + list(t.exclusion, false) + '</section></div>';
-    h += '<section class="box"><h3>' + icon('baby') + 'Chính sách trẻ em</h3><ul class="dots">' + t.children.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>' +
+    h += '<div class="two"><section class="box"><h3>' + T('incl') + '</h3>' + list(t.inclusion, true) + '</section><section class="box"><h3>' + T('excl') + '</h3>' + list(t.exclusion, false) + '</section></div>';
+    h += '<section class="box"><h3>' + icon('baby') + T('kids') + '</h3><ul class="dots">' + t.children.map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul>' +
       (t.note ? '<div class="note">' + esc(t.note) + '</div>' : '') + '</section>';
     h += '</div><aside id="book-wrap"></aside></div>';
     return h;
@@ -149,34 +154,34 @@
 
     function ctr(key, label, sub, min) {
       return '<div class="ctr"><div><div class="t">' + label + '</div><div class="s">' + sub + '</div></div><div class="c">' +
-        '<button type="button" data-dec="' + key + '" data-min="' + min + '" aria-label="Bớt ' + label + '">−</button><output id="o-' + key + '">' + st[key] + '</output>' +
-        '<button type="button" data-inc="' + key + '" aria-label="Thêm ' + label + '">+</button></div></div>';
+        '<button type="button" data-dec="' + key + '" data-min="' + min + '" aria-label="' + T('less') + ' ' + label + '">−</button><output id="o-' + key + '">' + st[key] + '</output>' +
+        '<button type="button" data-inc="' + key + '" aria-label="' + T('more') + ' ' + label + '">+</button></div></div>';
     }
 
     function render() {
       if (st.done) {
-        wrap.innerHTML = '<div class="book ok"><div class="tick">' + icon('check') + '</div><h3>Đặt tour thành công!</h3>' +
-          '<p>Cảm ơn <b>' + esc(st.name) + '</b>. Chúng tôi sẽ liên hệ qua số <b>' + esc(st.phone) + '</b> trong thời gian sớm nhất để xác nhận tour <b>' + esc(t.code) + '</b> ngày <b>' + st.date.split('-').reverse().join('/') + '</b>.</p>' +
-          '<div class="total"><span>Tạm tính</span><b>' + vnd(total()) + '</b></div><p><button type="button" class="linkbtn" id="edit">Sửa thông tin</button></p></div>';
+        wrap.innerHTML = '<div class="book ok"><div class="tick">' + icon('check') + '</div><h3>' + T('ok') + '</h3>' +
+          '<p>' + T('okTxt', { name: esc(st.name), phone: esc(st.phone), code: esc(t.code), date: st.date.split('-').reverse().join('/') }) + '</p>' +
+          '<div class="total"><span>' + T('total') + '</span><b>' + vnd(total()) + '</b></div><p><button type="button" class="linkbtn" id="edit">' + T('edit') + '</button></p></div>';
         $('#edit').onclick = function () { st.done = false; render(); };
         return;
       }
-      var veh = t.vehicles.length > 1 ? '<div><div class="grp-t">' + icon('bus') + 'Phương tiện</div><div class="vopts">' + t.vehicles.map(function (v, i) {
-        return '<button type="button" class="vopt' + (i === st.veh ? ' on' : '') + '" data-veh="' + i + '" aria-pressed="' + (i === st.veh) + '"><span>' + esc(v.label) + '</span><span>' + (v.extra ? '+' + vnd(v.extra) : 'Tiêu chuẩn') + '</span></button>';
+      var veh = t.vehicles.length > 1 ? '<div><div class="grp-t">' + icon('bus') + T('vehicle') + '</div><div class="vopts">' + t.vehicles.map(function (v, i) {
+        return '<button type="button" class="vopt' + (i === st.veh ? ' on' : '') + '" data-veh="' + i + '" aria-pressed="' + (i === st.veh) + '"><span>' + esc(v.label) + '</span><span>' + (v.extra ? '+' + vnd(v.extra) : T('standard')) + '</span></button>';
       }).join('') + '</div></div>' : '';
-      wrap.innerHTML = '<div class="book" id="book-form"><div class="lbl-s">Giá người lớn</div><div class="big">' + vnd(t.price) + '</div>' +
-        '<div class="tiny">' + (isFlat(t.price) ? 'Đồng giá trọn gói' : (t.priceUsd ? esc(t.priceUsd) + ' · ' : '') + 'Trọn gói') + (t.minPax ? ' · tối thiểu ' + t.minPax + ' khách' : '') + '</div>' +
+      wrap.innerHTML = '<div class="book" id="book-form"><div class="lbl-s">' + T('adultPrice') + '</div><div class="big">' + vnd(t.price) + '</div>' +
+        '<div class="tiny">' + (isFlat(t.price) ? T('flatAllIn') : (t.priceUsd ? esc(t.priceUsd) + ' · ' : '') + T('allIn')) + (t.minPax ? ' · ' + T('minPax', { n: t.minPax }) : '') + '</div>' +
         '<form novalidate>' +
-        '<label class="f">Ngày khởi hành<input type="date" name="date" min="' + today + '" value="' + st.date + '" required></label>' + veh +
-        '<div class="pax"><div class="grp-t">' + icon('users') + 'Số khách</div>' +
-        ctr('adults', 'Người lớn', 'Từ 9 tuổi', t.minPax || 1) + ctr('kids', 'Trẻ em', '5 – 8 tuổi (75%)', 0) + ctr('babies', 'Em bé', 'Dưới 5 tuổi (miễn phí)', 0) + '</div>' +
-        (t.singleSupplement ? '<label class="chk"><input type="checkbox" name="single"' + (st.single ? ' checked' : '') + '>Phòng đơn (+' + vnd(t.singleSupplement) + ')</label>' : '') +
-        '<label class="f">Họ và tên<input type="text" name="name" autocomplete="name" value="' + esc(st.name) + '" required></label>' +
-        '<label class="f">Số điện thoại / Zalo<input type="tel" name="phone" autocomplete="tel" inputmode="tel" value="' + esc(st.phone) + '" required></label>' +
-        '<label class="f">Email (không bắt buộc)<input type="email" name="email" autocomplete="email" value="' + esc(st.email) + '"></label>' +
-        '<div class="total"><span>Tạm tính</span><b id="tot">' + vnd(total()) + '</b></div>' +
-        '<button class="btn btn-blue submit" type="submit">Đặt tour ngay</button>' +
-        '<p class="fine">Không cần thanh toán trước · Chúng tôi sẽ gọi lại để xác nhận</p></form></div>';
+        '<label class="f">' + T('date') + '<input type="date" name="date" min="' + today + '" value="' + st.date + '" required></label>' + veh +
+        '<div class="pax"><div class="grp-t">' + icon('users') + T('guests') + '</div>' +
+        ctr('adults', T('adults'), T('adultsSub'), t.minPax || 1) + ctr('kids', T('children'), T('childrenSub'), 0) + ctr('babies', T('babies'), T('babiesSub'), 0) + '</div>' +
+        (t.singleSupplement ? '<label class="chk"><input type="checkbox" name="single"' + (st.single ? ' checked' : '') + '>' + T('single') + ' (+' + vnd(t.singleSupplement) + ')</label>' : '') +
+        '<label class="f">' + T('name') + '<input type="text" name="name" autocomplete="name" value="' + esc(st.name) + '" required></label>' +
+        '<label class="f">' + T('phone') + '<input type="tel" name="phone" autocomplete="tel" inputmode="tel" value="' + esc(st.phone) + '" required></label>' +
+        '<label class="f">' + T('email') + '<input type="email" name="email" autocomplete="email" value="' + esc(st.email) + '"></label>' +
+        '<div class="total"><span>' + T('total') + '</span><b id="tot">' + vnd(total()) + '</b></div>' +
+        '<button class="btn btn-blue submit" type="submit">' + T('bookNow') + '</button>' +
+        '<p class="fine">' + T('fine') + '</p></form></div>';
       bind();
     }
 
@@ -202,21 +207,23 @@
         if (!f.reportValidity()) return;
         st.name = f.name.value.trim(); st.phone = f.phone.value.trim(); st.email = f.email.value.trim();
         var btn = f.querySelector('.submit'); var bt = btn.textContent;
-        st.sending = true; btn.disabled = true; btn.textContent = 'Đang gửi…';
+        st.sending = true; btn.disabled = true; btn.textContent = T('sending');
         var dd = st.date.split('-').reverse().join('/');
+        var V = viTour(d.id, du.id, t.code) || { d: d, du: du, t: t };
+        var fmtVi = function (n) { return Math.round(n).toLocaleString('vi-VN') + 'đ'; };
         var payload = {
           _subject: 'Đơn đặt tour mới: ' + t.code + ' – ' + st.name + ' – ' + dd, _template: 'table',
-          'Mã tour': t.code, 'Tên tour': t.name, 'Điểm đến / thời gian': d.name + ' · ' + du.label, 'Ngày khởi hành': dd,
-          'Phương tiện': t.vehicles.length > 1 ? t.vehicles[st.veh].label : 'Xe đưa đón khứ hồi',
+          'Mã tour': t.code, 'Tên tour': V.t.name, 'Điểm đến / thời gian': V.d.name + ' · ' + V.du.label, 'Ngày khởi hành': dd,
+          'Phương tiện': t.vehicles.length > 1 ? V.t.vehicles[st.veh].label : 'Xe đưa đón khứ hồi',
           'Người lớn': String(st.adults), 'Trẻ em (5–8 tuổi)': String(st.kids), 'Em bé (dưới 5 tuổi)': String(st.babies),
-          'Phòng đơn': t.singleSupplement ? (st.single ? 'Có' : 'Không') : '—', 'Tạm tính': vnd(total()),
+          'Phòng đơn': t.singleSupplement ? (st.single ? 'Có' : 'Không') : '—', 'Tạm tính': fmtVi(total()), 'Ngôn ngữ khách': I.lang === 'en' ? 'Tiếng Anh (EN)' : 'Tiếng Việt',
           'Họ và tên': st.name, 'Số điện thoại / Zalo': st.phone, 'Email khách': st.email || '—', 'Thời gian đặt': new Date().toLocaleString('vi-VN')
         };
         if (st.email) payload._replyto = st.email;
         fetch('https://formsubmit.co/ajax/' + BOOKING_EMAIL, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) })
           .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok || String(j.success) === 'false') throw 0; }); })
           .then(function () { st.sending = false; st.done = true; render(); wrap.scrollIntoView({ behavior: 'smooth', block: 'center' }); })
-          .catch(function () { st.sending = false; btn.disabled = false; btn.textContent = bt; toast('Chưa gửi được đơn. Vui lòng thử lại hoặc gọi hotline ' + HOTLINE + '.'); });
+          .catch(function () { st.sending = false; btn.disabled = false; btn.textContent = bt; toast(T('fail', { h: HOTLINE })); });
       };
     }
     render();
@@ -229,18 +236,19 @@
   }
 
   /* ---------- Thanh dưới cùng (điện thoại) ---------- */
-  var BAR_DEFAULT = $('#bar').innerHTML;
+  var BAR_HTML = $('#bar').innerHTML;
+  function resetBar() { $('#bar').innerHTML = BAR_HTML; I.applyStatic(); }
   function updateBar(t, tot) {
-    $('#bar').innerHTML = '<div class="bar-price"><small>Tạm tính</small><b>' + vnd(tot) + '</b></div><a class="btn btn-blue" href="#book-form" data-scroll>Đặt ngay</a>';
+    $('#bar').innerHTML = '<div class="bar-price"><small>' + T('total') + '</small><b>' + vnd(tot) + '</b></div><a class="btn btn-blue" href="#book-form" data-scroll>' + T('bookShort') + '</a>';
   }
 
   /* ---------- Router ---------- */
-  function route() {
+  function route(keepScroll) {
     var hash = location.hash || '';
     var home = $('#home'), app = $('#app');
     if (hash.indexOf('#/') !== 0) {
-      app.hidden = true; home.hidden = false; $('#bar').innerHTML = BAR_DEFAULT;
-      document.title = 'Legend Journey – Tour Ninh Bình & Hạ Long từ Hà Nội';
+      app.hidden = true; home.hidden = false; resetBar();
+      document.title = T('title');
       if (hash.length > 1) { var el = document.getElementById(hash.slice(1)); if (el) setTimeout(function () { el.scrollIntoView(); }, 0); }
       return;
     }
@@ -250,14 +258,14 @@
     var t = du && p[2] ? du.tours.filter(function (x) { return x.code === p[2]; })[0] : null;
     if (!d) { location.replace('#chon-tour'); return; }
     var step = t ? 3 : du ? 2 : 1;
-    home.hidden = true; app.hidden = false; $('#bar').innerHTML = BAR_DEFAULT;
+    home.hidden = true; app.hidden = false; resetBar();
     $('#stepper').innerHTML = stepper(step, d, du);
     $('#back').dataset.go = step === 1 ? '#chon-tour' : step === 2 ? '#/' + d.id : '#/' + d.id + '/' + du.id;
     var v = $('#view');
     if (step === 1) { v.innerHTML = viewDurations(d); document.title = d.name + ' – Legend Journey'; }
     else if (step === 2) { v.innerHTML = viewTours(d, du); document.title = d.name + ' ' + du.label + ' – Legend Journey'; }
     else { v.innerHTML = viewDetail(d, du, t); mountBooking(d, du, t); document.title = t.name + ' – Legend Journey'; }
-    window.scrollTo(0, 0);
+    if (!keepScroll) window.scrollTo(0, 0);
   }
 
   document.addEventListener('click', function (e) {
@@ -279,6 +287,8 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') $('#lightbox').hidden = true; });
   window.addEventListener('hashchange', route);
 
+  I.onChange(function () { DATA = I.data(); renderHome(); route(true); });
+  I.applyStatic();
   renderHome();
   route();
 })();

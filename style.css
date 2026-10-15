@@ -315,3 +315,15 @@ footer .copy{margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,
 .fab-tip{position:absolute;left:66px;top:50%;transform:translateY(-50%);white-space:nowrap;background:var(--navy);color:#fff;font-size:13px;font-weight:600;padding:6px 12px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .15s}
 .fab-btn:hover .fab-tip,.fab-btn:focus-visible .fab-tip{opacity:1}
 @media (max-width:760px){.fab{left:12px;bottom:96px;gap:10px}.fab-btn{width:50px;height:50px}.fab-btn svg{width:23px;height:23px}.fab-zalo b{font-size:13px}.fab-tip{display:none}}
+
+/* Chuyển ngôn ngữ */
+.hdr-r{display:flex;align-items:center;gap:20px}
+.lang{display:inline-flex;border:1.5px solid var(--line);border-radius:999px;padding:3px;gap:2px;background:#fff}
+.lang button{border:0;background:none;font:inherit;font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--muted);min-width:40px;height:32px;border-radius:999px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--blue);color:#fff}
+.lang button:hover:not([aria-pressed="true"]){color:var(--blue)}
+@media (max-width:760px){.hdr-r{gap:10px}.lang button{min-width:36px;height:30px;font-size:12px}}
+.hdr-r .btn,.hdr-r a{white-space:nowrap}
+@media (max-width:760px){.hdr-r .btn{padding-left:14px;padding-right:14px}}
+@media (max-width:360px){.brand small,.logo small{display:none}}
+@media (max-width:420px){.hdr-r{gap:8px}.hdr-r .btn{padding:0 12px;font-size:14px;height:40px;display:inline-flex;align-items:center}.lang button{min-width:32px}}
