@@ -55,7 +55,7 @@
     if (son) {
       var st = son.days[0].stops;
       cards.push(featCard({
-        image: 'u:photo-1643029891412-92f9a81a8c16', badge: T('badgeCruise'), title: T('featHlTitle'),
+        image: 'hl-aerial', badge: T('badgeCruise'), title: T('featHlTitle'),
         sub: son.short,
         facts: [[T('fPickup'), st[0].time], [T('fReturn'), st[st.length - 1].time], [T('fCruise'), 'Halong Sonata 5★'], [T('fMeal'), T('fIntlLunch')]],
         priceLabel: T('allIn'), price: son.price,
